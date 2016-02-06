@@ -17,7 +17,7 @@ gulp.task('scripts', function() {
     ])
     .pipe(concat('scripts.js'))
     .pipe(gulp.dest(srcPath))
-    .pipe(uglify())
+    .pipe(uglify({mangle: {toplevel: true}}))
     .pipe(rename('scripts.min.js'))
     .pipe(gulp.dest(srcPath))
     .pipe(livereload());

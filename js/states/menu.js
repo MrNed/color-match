@@ -1,3 +1,4 @@
+/*
 BasicGame.Menu = function() {
 
 };
@@ -31,3 +32,4 @@ BasicGame.Menu.prototype = {
   },
 
 };
+*/

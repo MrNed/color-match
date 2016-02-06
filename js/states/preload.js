@@ -35,7 +35,8 @@ BasicGame.Preload.prototype = {
   update: function() {
 
     if (this.ready) {
-      this.state.start('Menu');
+      // this.state.start('Menu');
+      this.state.start('Game');
     }
 
   },
