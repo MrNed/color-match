@@ -1,11 +1,11 @@
-BasicGame.Preload = function() {
+var Preload = function() {
 
   this.preloadBar = null;
   this.ready = true;
 
 };
 
-BasicGame.Preload.prototype = {
+Preload.prototype = {
 
   preload: function() {
 

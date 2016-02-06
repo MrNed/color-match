@@ -11,8 +11,8 @@ var gulp = require('gulp'),
 gulp.task('scripts', function() {
   return gulp.src([
       srcPath + 'classes/*.js',
-      srcPath + 'states/*.js',
       srcPath + 'classes/*/*.js',
+      srcPath + 'states/*.js',
       srcPath + 'main.js'
     ])
     .pipe(concat('scripts.js'))

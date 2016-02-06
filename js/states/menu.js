@@ -1,9 +1,9 @@
 /*
-BasicGame.Menu = function() {
+var Menu = function() {
 
 };
 
-BasicGame.Menu.prototype = {
+Menu.prototype = {
 
   init: function(config) {
     if (!config) {

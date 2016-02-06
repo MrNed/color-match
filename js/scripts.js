@@ -1,10 +1,6 @@
-var BasicGame = {};
+var Boot = function() {};
 
-BasicGame.Boot = function() {
-
-};
-
-BasicGame.Boot.prototype = {
+Boot.prototype = {
 
   init: function() {
 
@@ -69,7 +65,7 @@ var posArr = {
   '8': {'x': 200, 'y': 320}
 };
 
-BasicGame.Game = function(game) {
+var BasicGame = function() {
 
   this.points = 0;
   this.best = 0;
@@ -81,7 +77,7 @@ BasicGame.Game = function(game) {
 
 };
 
-BasicGame.Game.prototype = {
+BasicGame.prototype = {
 
   init: function (config) {
 
@@ -233,11 +229,11 @@ BasicGame.Game.prototype = {
 
 };
 /*
-BasicGame.Menu = function() {
+var Menu = function() {
 
 };
 
-BasicGame.Menu.prototype = {
+Menu.prototype = {
 
   init: function(config) {
     if (!config) {
@@ -267,14 +263,14 @@ BasicGame.Menu.prototype = {
 
 };
 */
-BasicGame.Preload = function() {
+var Preload = function() {
 
   this.preloadBar = null;
   this.ready = true;
 
 };
 
-BasicGame.Preload.prototype = {
+Preload.prototype = {
 
   preload: function() {
 
@@ -319,9 +315,9 @@ BasicGame.Preload.prototype = {
 };
 var game = new Phaser.Game(300, 420, Phaser.Canvas, 'game_cont');
 
-game.state.add('Boot', BasicGame.Boot);
-game.state.add('Preload', BasicGame.Preload);
+game.state.add('Boot', Boot);
+game.state.add('Preload', Preload);
 // game.state.add('Menu', BasicGame.Menu);
-game.state.add('Game', BasicGame.Game);
+game.state.add('Game', BasicGame);
 
 game.state.start('Boot');

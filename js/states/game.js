@@ -32,7 +32,7 @@ var posArr = {
   '8': {'x': 200, 'y': 320}
 };
 
-BasicGame.Game = function(game) {
+var BasicGame = function() {
 
   this.points = 0;
   this.best = 0;
@@ -44,7 +44,7 @@ BasicGame.Game = function(game) {
 
 };
 
-BasicGame.Game.prototype = {
+BasicGame.prototype = {
 
   init: function (config) {
 

@@ -1,10 +1,6 @@
-var BasicGame = {};
+var Boot = function() {};
 
-BasicGame.Boot = function() {
-
-};
-
-BasicGame.Boot.prototype = {
+Boot.prototype = {
 
   init: function() {
 
