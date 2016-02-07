@@ -50,27 +50,30 @@ BasicGame.prototype = {
 
     this.config = config;
 
+    var bestScoreCookie = getCookie("ColorMatch_BestScore");
+    if (bestScoreCookie != "") {
+      this.best = bestScoreCookie;
+    }
+
     game.renderer.renderSession.roundPixels = true;
 
   },
 
   create: function() {
 
-    var self = this;
-
-    self.score = game.add.text(game.world.width - 25, 25, 0 + " ", {
+    this.score = game.add.text(game.world.width - 25, 25, 0 + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
-    self.score.font = 'exo';
-    self.score.anchor.setTo(0.5);
+    this.score.font = 'exo';
+    this.score.anchor.setTo(0.5);
 
-    self.bestScore = game.add.text(25, 25, 0 + " ", {
+    this.bestScore = game.add.text(25, 25, this.best + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
-    self.bestScore.font = 'exo';
-    self.bestScore.anchor.setTo(0.5);
+    this.bestScore.font = 'exo';
+    this.bestScore.anchor.setTo(0.5);
 
     this.blocks = this.add.group();
     this.spawnBlocks();
@@ -79,13 +82,18 @@ BasicGame.prototype = {
 
   createBlock: function(color, x, y, isPoint) {
 
-    var block = game.add.bitmapData(90, 90);
-    block.ctx.rect(0, 0, 90, 90);
-    block.ctx.fillStyle = color;
-    block.ctx.fill();
+    color = '0x' + color.substring(1);
 
-    var sprite = game.add.sprite(x, y, block);
+    var block = game.add.graphics(0, 0);
+    block.beginFill(color);
+    block.drawRect(0, 0, 90, 90);
+    block.endFill();
+
+    var sprite = game.add.sprite(x, y, null);
     sprite.inputEnabled = true;
+    sprite.addChild(block);
+
+    block = null;
 
     if (isPoint) {
       sprite.isPoint = true;
@@ -96,6 +104,8 @@ BasicGame.prototype = {
     sprite.events.onInputDown.add(this.click, this);
 
     this.blocks.add(sprite);
+
+    sprite = null;
 
   },
 
@@ -126,7 +136,7 @@ BasicGame.prototype = {
     }, time, "Linear", true);
     this.timeTween.onComplete.addOnce(function() {
       timeBarMask.kill();
-      this.points = 0;
+      this.end();
       this.respawn();
     }, this);
 
@@ -135,7 +145,7 @@ BasicGame.prototype = {
   spawnBlocks: function() {
 
     var freePos = [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        index = Math.floor(Math.random() * freePos.length),
+        index = Math.floor(Math.random() * 9),
         freeColors = this.points < 20 ? colorsTierOne.slice() : colorsTierOne.concat(colorsTierTwo),
         freeColorsCount = freeColors.length,
         colorIndex = Math.floor(Math.random() * freeColorsCount),
@@ -145,20 +155,23 @@ BasicGame.prototype = {
 
     this.createBlock(color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y'], true);
 
-    freePos.splice(index, 1);
-    freeColors.splice(colorIndex, 1);
+    spliceOne(freePos, index);
+    spliceOne(freeColors, colorIndex);
 
-    var blocksNum = this.points <= 16 ? this.points / 2 : 8;
+    var blocksNum = this.points <= 16 ? this.points : 8;
 
     for (var i = 0; i < blocksNum; i++) {
-      index = Math.floor(Math.random() * freePos.length);
-      colorIndex = Math.floor(Math.random() * (freeColors.length));
+      index = Math.floor(Math.random() * (8 - i));
+      colorIndex = Math.floor(Math.random() * (freeColorsCount - 1));
       color = colorsArr[freeColors[colorIndex]];
 
       this.createBlock(color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y']);
 
-      freePos.splice(index, 1);
+      spliceOne(freePos, index);
     }
+
+    freePos = null;
+    freeColors = null;
 
   },
 
@@ -167,12 +180,7 @@ BasicGame.prototype = {
     if (block.isPoint) {
       this.points++;
     } else {
-      this.points = 0;
-    }
-
-    if (this.points > this.best) {
-      this.best = this.points;
-      this.bestScore.text = this.best.toString();
+      this.end();
     }
 
     this.score.text = this.points.toString();
@@ -180,13 +188,24 @@ BasicGame.prototype = {
     this.respawn();
   },
 
+  end: function() {
+
+    if (this.points > this.best) {
+      this.best = this.points;
+      this.bestScore.text = this.best.toString();
+
+      setCookie('ColorMatch_BestScore', this.best, 7);
+    }
+
+    this.points = 0;
+    this.score.text = '0';
+
+  },
+
   respawn: function() {
 
     this.tweens.removeAll();
-
-    this.blocks.forEach(function(item, index) {
-      item.kill();
-    });
+    this.blocks.removeAll();
 
     this.bar.kill();
     this.timeBar.kill();
