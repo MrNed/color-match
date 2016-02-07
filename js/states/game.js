@@ -1,24 +1,24 @@
-var colorsArr = {
+/*
   'peter_river': '#3498db',
   'belize_hole': '#2980b9',
   'turquoise': '#1abc9c',
   'green_sea': '#16a085',
   'emerald': '#2ecc71',
   'nephritis': '#27ae60',
-  'amethyst': '#9b59b6',
-  'wisteria': '#8e44ad',
   'sun_flower': '#f1c40f',
   'orange': '#f39c12',
   'carrot': '#e67e22',
   'pumpkin': '#d35400',
   'alizarin': '#e74c3c',
   'pomegranate': '#c0392b',
-  'concrete': '#95a5a6',
-  'asbestos': '#7f8c8d'
-};
+*/
 
-var colorsTierOne = ['peter_river', 'turquoise', 'emerald', 'amethyst', 'sun_flower', 'carrot', 'alizarin', 'concrete'];
-var colorsTierTwo = ['belize_hole', 'green_sea', 'nephritis', 'wisteria', 'orange', 'pumpkin', 'pomegranate', 'asbestos'];
+var colorsArr = {
+  'group_1': ['0x3498db', '0x1abc9c', '0x2ecc71'],
+  'group_1_hard': ['0x3498db', '0x1abc9c', '0x2ecc71', '0x2980b9', '0x16a085', '0x27ae60'],
+  'group_2': ['0xf1c40f', '0xe67e22', '0xe74c3c'],
+  'group_2_hard': ['0xf1c40f', '0xe67e22', '0xe74c3c', '0xf39c12', '0xd35400', '0xc0392b']
+}
 
 var posArr = {
   '0': {'x': 10, 'y': 130},
@@ -82,8 +82,6 @@ BasicGame.prototype = {
 
   createBlock: function(color, x, y, isPoint) {
 
-    color = '0x' + color.substring(1);
-
     var block = game.add.graphics(0, 0);
     block.beginFill(color);
     block.drawRect(0, 0, 90, 90);
@@ -111,14 +109,12 @@ BasicGame.prototype = {
 
   createBars: function(color) {
 
-    color = '0x' + color.substring(1);
-
     this.bar = game.add.graphics(10, 60);
     this.bar.beginFill(color);
     this.bar.drawRect(0, 0, 280, 30);
     this.bar.endFill();
 
-    var time = this.points < 35 ? this.timeLeft - (this.points * 50) : 750;
+    var time = this.points < 35 ? this.timeLeft - (this.points * 50) : 1000;
 
     this.timeBar = game.add.graphics(10, 95);
     this.timeBar.beginFill(0xecf0f1);
@@ -146,10 +142,12 @@ BasicGame.prototype = {
 
     var freePos = [0, 1, 2, 3, 4, 5, 6, 7, 8],
         index = Math.floor(Math.random() * 9),
-        freeColors = this.points < 20 ? colorsTierOne.slice() : colorsTierOne.concat(colorsTierTwo),
-        freeColorsCount = freeColors.length,
+        group = 'group_' + (Math.floor(Math.random() * 2) + 1),
+        groupName = this.points < 20 ? group : group + '_hard',
+        freeColors = colorsArr[groupName].slice(),
+        freeColorsCount = this.points < 20 ? 3 : 6,
         colorIndex = Math.floor(Math.random() * freeColorsCount),
-        color = colorsArr[freeColors[colorIndex]];
+        color = freeColors[colorIndex];
 
     this.createBars(color);
 
@@ -158,12 +156,12 @@ BasicGame.prototype = {
     spliceOne(freePos, index);
     spliceOne(freeColors, colorIndex);
 
-    var blocksNum = this.points <= 16 ? this.points : 8;
+    var blocksNum = this.points <= 7 ? this.points : 8;
 
     for (var i = 0; i < blocksNum; i++) {
       index = Math.floor(Math.random() * (8 - i));
       colorIndex = Math.floor(Math.random() * (freeColorsCount - 1));
-      color = colorsArr[freeColors[colorIndex]];
+      color = freeColors[colorIndex];
 
       this.createBlock(color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y']);
 
