@@ -1,4 +1,4 @@
-var Preload = function() {
+var Preload = function(game) {
 
   this.preloadBar = null;
   this.ready = true;
@@ -9,7 +9,7 @@ Preload.prototype = {
 
   preload: function() {
 
-    this.preloadBar = this.add.sprite(game.width * 0.5, game.height * 0.5, 'preloader', 0);
+    this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
     this.preloadBar.anchor.set(0.5, 0.5);
 
     var preloaderFrames = [],

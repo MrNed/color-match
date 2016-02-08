@@ -1,4 +1,4 @@
-var Boot = function() {};
+var Boot = function(game) {};
 
 Boot.prototype = {
 
@@ -19,7 +19,7 @@ Boot.prototype = {
 
     this.stage.backgroundColor = '#2c3e50';
 
-    this.fontLoad = game.add.text(game.world.centerX, game.world.centerY, " a ", {
+    this.fontLoad = this.add.text(this.world.centerX, this.world.centerY, " a ", {
         font: "200px",
         fill: "#ecf0f1",
     });

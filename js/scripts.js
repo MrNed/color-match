@@ -1,4 +1,4 @@
-var Boot = function() {};
+var Boot = function(game) {};
 
 Boot.prototype = {
 
@@ -19,7 +19,7 @@ Boot.prototype = {
 
     this.stage.backgroundColor = '#2c3e50';
 
-    this.fontLoad = game.add.text(game.world.centerX, game.world.centerY, " a ", {
+    this.fontLoad = this.add.text(this.world.centerX, this.world.centerY, " a ", {
         font: "200px",
         fill: "#ecf0f1",
     });
@@ -65,7 +65,7 @@ var posArr = {
   '8': {'x': 200, 'y': 320}
 };
 
-var BasicGame = function() {
+var BasicGame = function(game) {
 
   this.points = 0;
   this.best = 0;
@@ -88,20 +88,20 @@ BasicGame.prototype = {
       this.best = bestScoreCookie;
     }
 
-    game.renderer.renderSession.roundPixels = true;
+    this.game.renderer.renderSession.roundPixels = true;
 
   },
 
   create: function() {
 
-    this.score = game.add.text(game.world.width - 25, 25, 0 + " ", {
+    this.score = this.add.text(this.world.width - 25, 25, 0 + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
     this.score.font = 'exo';
     this.score.anchor.setTo(0.5);
 
-    this.bestScore = game.add.text(25, 25, this.best + " ", {
+    this.bestScore = this.add.text(25, 25, this.best + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
@@ -115,12 +115,12 @@ BasicGame.prototype = {
 
   createBlock: function(color, x, y, isPoint) {
 
-    var block = game.add.graphics(0, 0);
+    var block = this.add.graphics(0, 0);
     block.beginFill(color);
     block.drawRect(0, 0, 90, 90);
     block.endFill();
 
-    var sprite = game.add.sprite(x, y, null);
+    var sprite = this.add.sprite(x, y, null);
     sprite.inputEnabled = true;
     sprite.addChild(block);
 
@@ -142,31 +142,33 @@ BasicGame.prototype = {
 
   createBars: function(color) {
 
-    this.bar = game.add.graphics(10, 60);
+    this.bar = this.add.graphics(10, 60);
     this.bar.beginFill(color);
     this.bar.drawRect(0, 0, 280, 30);
     this.bar.endFill();
 
     var time = this.points < 35 ? this.timeLeft - (this.points * 50) : 1000;
 
-    this.timeBar = game.add.graphics(10, 95);
+    this.timeBar = this.add.graphics(10, 95);
     this.timeBar.beginFill(0xecf0f1);
     this.timeBar.drawRect(0, 0, 280, 10);
     this.timeBar.endFill();
 
-    timeBarMask = game.add.graphics(280, 95);
+    timeBarMask = this.add.graphics(280, 95);
     timeBarMask.beginFill(0x2c3e50);
     timeBarMask.drawRect(0, 0, 280, 10);
     timeBarMask.endFill();
 
-    this.timeTween = game.add.tween(timeBarMask);
-    this.timeTween.to({
-      x: 10
-    }, time, "Linear", true);
-    this.timeTween.onComplete.addOnce(function() {
-      timeBarMask.kill();
-      this.end();
-      this.respawn();
+    this.time.events.add(1, function() {
+      this.timeTween = this.add.tween(timeBarMask);
+      this.timeTween.to({
+        x: 10
+      }, time, "Linear", true);
+      this.timeTween.onComplete.addOnce(function() {
+        timeBarMask.kill();
+        this.end();
+        this.respawn();
+      }, this);
     }, this);
 
   },
@@ -280,7 +282,7 @@ Menu.prototype = {
 
 };
 */
-var Preload = function() {
+var Preload = function(game) {
 
   this.preloadBar = null;
   this.ready = true;
@@ -291,7 +293,7 @@ Preload.prototype = {
 
   preload: function() {
 
-    this.preloadBar = this.add.sprite(game.width * 0.5, game.height * 0.5, 'preloader', 0);
+    this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
     this.preloadBar.anchor.set(0.5, 0.5);
 
     var preloaderFrames = [],
@@ -330,14 +332,22 @@ Preload.prototype = {
   }
 
 };
-var game = new Phaser.Game(300, 420, Phaser.Canvas, 'game_cont');
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  start();
+} else {
+  document.addEventListener('DOMContentLoaded', start, false);
+}
 
-game.state.add('Boot', Boot);
-game.state.add('Preload', Preload);
-// game.state.add('Menu', BasicGame.Menu);
-game.state.add('Game', BasicGame);
+function start() {
+  var game = new Phaser.Game(300, 420, Phaser.Canvas, 'game_cont');
 
-game.state.start('Boot');
+  game.state.add('Boot', Boot);
+  game.state.add('Preload', Preload);
+  // game.state.add('Menu', BasicGame.Menu);
+  game.state.add('Game', BasicGame);
+
+  game.state.start('Boot');
+}
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
