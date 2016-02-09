@@ -59,19 +59,11 @@ var BasicGame = function(game) {
 
   this.create = function() {
 
-    scoreTxt = this.add.text(this.world.width - 25, 25, 0 + " ", {
-        font: "24px",
-        fill: "#ecf0f1",
-    });
-    scoreTxt.font = 'exo';
-    scoreTxt.anchor.setTo(0.5);
+    scoreTxt = this.add.bitmapText(this.world.width - 10, 25, '04font', '0', 28);
+    scoreTxt.anchor.setTo(1, 0.5);
 
-    bestTxt = this.add.text(25, 25, best + " ", {
-        font: "24px",
-        fill: "#ecf0f1",
-    });
-    bestTxt.font = 'exo';
-    bestTxt.anchor.setTo(0.5);
+    bestTxt = this.add.bitmapText(10, 25, '04font', best, 28);
+    bestTxt.anchor.setTo(0, 0.5);
 
     blocks = this.add.group();
 

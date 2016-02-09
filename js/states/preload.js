@@ -1,5 +1,5 @@
 var preloadBar = null;
-var isReady = true;
+var isReady = false;
 
 var Preload = function() {
 
@@ -19,6 +19,8 @@ var Preload = function() {
     preloadBar.play('loading');
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+
+    this.load.bitmapFont('04font', 'res/04font.png', 'res/04font.fnt');
 
   };
 

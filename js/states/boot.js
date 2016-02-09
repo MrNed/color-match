@@ -17,13 +17,6 @@ var Boot = function() {
 
     this.stage.backgroundColor = '#2c3e50';
 
-    this.fontLoad = this.add.text(this.world.centerX, this.world.centerY, " a ", {
-        font: "200px",
-        fill: "#ecf0f1",
-    });
-    this.fontLoad.visible = false;
-    this.fontLoad.font = 'exo';
-
     this.state.start('Preload');
 
   };
