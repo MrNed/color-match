@@ -1,16 +1,12 @@
-var Preload = function(game) {
+var preloadBar = null;
+var isReady = true;
 
-  this.preloadBar = null;
-  this.ready = true;
+var Preload = function() {
 
-};
+  this.preload = function() {
 
-Preload.prototype = {
-
-  preload: function() {
-
-    this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
-    this.preloadBar.anchor.set(0.5, 0.5);
+    preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
+    preloadBar.anchor.set(0.5, 0.5);
 
     var preloaderFrames = [],
         i = 0;
@@ -19,32 +15,32 @@ Preload.prototype = {
       preloaderFrames[i] = i;
     }
 
-    this.preloadBar.animations.add('loading', preloaderFrames, 60, true);
-    this.preloadBar.play('loading');
+    preloadBar.animations.add('loading', preloaderFrames, 60, true);
+    preloadBar.play('loading');
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
-  },
+  };
 
-  create: function() {
+  this.create = function() {
 
-    this.preloadBar.cropEnabled = false;
+    preloadBar.cropEnabled = false;
 
-  },
+  };
 
-  update: function() {
+  this.update = function() {
 
-    if (this.ready) {
+    if (isReady) {
       // this.state.start('Menu');
       this.state.start('Game');
     }
 
-  },
+  };
 
-  onLoadComplete: function() {
+  this.onLoadComplete = function() {
 
-    this.ready = true;
+    isReady = true;
 
-  }
+  };
 
 };

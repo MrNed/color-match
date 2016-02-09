@@ -1,21 +1,19 @@
-var Boot = function(game) {};
+var Boot = function() {
 
-Boot.prototype = {
-
-  init: function() {
+  this.init = function() {
 
     this.input.maxPointers = 1;
     this.stage.disableVisibilityChange = true;
 
-  },
+  };
 
-  preload: function() {
+  this.preload = function() {
 
     this.load.atlas('preloader', 'res/preloader.png', 'res/preloader.json');
 
-  },
+  };
 
-  create: function() {
+  this.create = function() {
 
     this.stage.backgroundColor = '#2c3e50';
 
@@ -28,7 +26,7 @@ Boot.prototype = {
 
     this.state.start('Preload');
 
-  }
+  };
 
 };
 /*
@@ -65,186 +63,187 @@ var posArr = {
   '8': {'x': 200, 'y': 320}
 };
 
+var blocks = null,
+    points = 0,
+    best = 0,
+    scoreTxt = '',
+    bestTxt = '',
+    bar = null,
+    timeBar = null,
+    timeLeft = 2500,
+    timeTween = null;
+
 var BasicGame = function(game) {
 
-  this.points = 0;
-  this.best = 0;
-  this.bar = null;
-  this.timeBar = null;
-  this.blocks = null;
-  this.timeLeft = 2500;
-  this.timeTween = null;
-
-};
-
-BasicGame.prototype = {
-
-  init: function (config) {
+  this.init = function (config) {
 
     this.config = config;
 
     var bestScoreCookie = getCookie("ColorMatch_BestScore");
     if (bestScoreCookie != "") {
-      this.best = bestScoreCookie;
+      best = bestScoreCookie;
     }
 
-    this.game.renderer.renderSession.roundPixels = true;
+    game.renderer.renderSession.roundPixels = true;
 
-  },
+  };
 
-  create: function() {
+  this.create = function() {
 
-    this.score = this.add.text(this.world.width - 25, 25, 0 + " ", {
+    scoreTxt = this.add.text(this.world.width - 25, 25, 0 + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
-    this.score.font = 'exo';
-    this.score.anchor.setTo(0.5);
+    scoreTxt.font = 'exo';
+    scoreTxt.anchor.setTo(0.5);
 
-    this.bestScore = this.add.text(25, 25, this.best + " ", {
+    bestTxt = this.add.text(25, 25, best + " ", {
         font: "24px",
         fill: "#ecf0f1",
     });
-    this.bestScore.font = 'exo';
-    this.bestScore.anchor.setTo(0.5);
+    bestTxt.font = 'exo';
+    bestTxt.anchor.setTo(0.5);
 
-    this.blocks = this.add.group();
-    this.spawnBlocks();
+    blocks = this.add.group();
 
-  },
+    spawnBlocks(game);
 
-  createBlock: function(color, x, y, isPoint) {
+  };
 
-    var block = this.add.graphics(0, 0);
-    block.beginFill(color);
-    block.drawRect(0, 0, 90, 90);
-    block.endFill();
+};
 
-    var sprite = this.add.sprite(x, y, null);
-    sprite.inputEnabled = true;
-    sprite.addChild(block);
+var createBlock = function(game, color, x, y, isPoint) {
 
-    block = null;
+  var block = game.add.graphics(0, 0);
+  block.beginFill(color);
+  block.drawRect(0, 0, 90, 90);
+  block.endFill();
 
-    if (isPoint) {
-      sprite.isPoint = true;
-    } else {
-      sprite.isPoint = false;
-    }
+  var sprite = game.add.sprite(x, y, null);
+  sprite.inputEnabled = true;
+  sprite.addChild(block);
 
-    sprite.events.onInputDown.add(this.click, this);
+  block = null;
 
-    this.blocks.add(sprite);
+  if (isPoint) {
+    sprite.isPoint = true;
+  } else {
+    sprite.isPoint = false;
+  }
 
-    sprite = null;
+  sprite.events.onInputDown.add(function(tmpBlock) { clickOnBlock(tmpBlock, game); });
 
-  },
+  blocks.add(sprite);
 
-  createBars: function(color) {
+  sprite = null;
 
-    this.bar = this.add.graphics(10, 60);
-    this.bar.beginFill(color);
-    this.bar.drawRect(0, 0, 280, 30);
-    this.bar.endFill();
+};
 
-    var time = this.points < 35 ? this.timeLeft - (this.points * 50) : 1000;
+var createBars = function(game, color) {
 
-    this.timeBar = this.add.graphics(10, 95);
-    this.timeBar.beginFill(0xecf0f1);
-    this.timeBar.drawRect(0, 0, 280, 10);
-    this.timeBar.endFill();
+  bar = game.add.graphics(10, 60);
+  bar.beginFill(color);
+  bar.drawRect(0, 0, 280, 30);
+  bar.endFill();
 
-    timeBarMask = this.add.graphics(280, 95);
-    timeBarMask.beginFill(0x2c3e50);
-    timeBarMask.drawRect(0, 0, 280, 10);
-    timeBarMask.endFill();
+  var time = points < 35 ? timeLeft - (points * 50) : 1000;
 
-    this.time.events.add(1, function() {
-      this.timeTween = this.add.tween(timeBarMask);
-      this.timeTween.to({
-        x: 10
-      }, time, "Linear", true);
-      this.timeTween.onComplete.addOnce(function() {
-        timeBarMask.kill();
-        this.end();
-        this.respawn();
-      }, this);
+  timeBar = game.add.graphics(10, 95);
+  timeBar.beginFill(0xecf0f1);
+  timeBar.drawRect(0, 0, 280, 10);
+  timeBar.endFill();
+
+  timeBarMask = game.add.graphics(280, 95);
+  timeBarMask.beginFill(0x2c3e50);
+  timeBarMask.drawRect(0, 0, 280, 10);
+  timeBarMask.endFill();
+
+  game.time.events.add(1, function() {
+    timeTween = game.add.tween(timeBarMask);
+    timeTween.to({
+      x: 10
+    }, time, "Linear", true);
+    timeTween.onComplete.addOnce(function() {
+      timeBarMask.kill();
+      end();
+      respawn(game);
     }, this);
+  }, this);
 
-  },
+};
 
-  spawnBlocks: function() {
+var spawnBlocks = function(game) {
 
-    var freePos = [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        index = Math.floor(Math.random() * 9),
-        group = 'group_' + (Math.floor(Math.random() * 2) + 1),
-        groupName = this.points < 20 ? group : group + '_hard',
-        freeColors = colorsArr[groupName].slice(),
-        freeColorsCount = this.points < 20 ? 3 : 6,
-        colorIndex = Math.floor(Math.random() * freeColorsCount),
-        color = freeColors[colorIndex];
-
-    this.createBars(color);
-
-    this.createBlock(color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y'], true);
-
-    spliceOne(freePos, index);
-    spliceOne(freeColors, colorIndex);
-
-    var blocksNum = this.points <= 7 ? this.points : 8;
-
-    for (var i = 0; i < blocksNum; i++) {
-      index = Math.floor(Math.random() * (8 - i));
-      colorIndex = Math.floor(Math.random() * (freeColorsCount - 1));
+  var freePos = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      index = Math.floor(Math.random() * 9),
+      group = 'group_' + (Math.floor(Math.random() * 2) + 1),
+      groupName = points < 20 ? group : group + '_hard',
+      freeColors = colorsArr[groupName].slice(),
+      freeColorsCount = points < 20 ? 3 : 6,
+      colorIndex = Math.floor(Math.random() * freeColorsCount),
       color = freeColors[colorIndex];
 
-      this.createBlock(color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y']);
+  createBars(game, color);
 
-      spliceOne(freePos, index);
-    }
+  createBlock(game, color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y'], true);
 
-    freePos = null;
-    freeColors = null;
+  spliceOne(freePos, index);
+  spliceOne(freeColors, colorIndex);
 
-  },
+  var blocksNum = points <= 7 ? points : 8;
 
-  click: function(block) {
+  var i = 0;
+  for (i = 0; i < blocksNum; i++) {
+    index = Math.floor(Math.random() * (8 - i));
+    colorIndex = Math.floor(Math.random() * (freeColorsCount - 1));
+    color = freeColors[colorIndex];
 
-    if (block.isPoint) {
-      this.points++;
-    } else {
-      this.end();
-    }
+    createBlock(game, color, posArr[freePos[index]]['x'], posArr[freePos[index]]['y']);
 
-    this.score.text = this.points.toString();
-
-    this.respawn();
-  },
-
-  end: function() {
-
-    if (this.points > this.best) {
-      this.best = this.points;
-      this.bestScore.text = this.best.toString();
-
-      setCookie('ColorMatch_BestScore', this.best, 7);
-    }
-
-    this.points = 0;
-    this.score.text = '0';
-
-  },
-
-  respawn: function() {
-
-    this.tweens.removeAll();
-    this.blocks.removeAll();
-
-    this.bar.kill();
-    this.timeBar.kill();
-    this.spawnBlocks();
-
+    spliceOne(freePos, index);
   }
+
+  freePos = null;
+  freeColors = null;
+
+};
+
+var clickOnBlock = function(block, game) {
+
+  if (block.isPoint) {
+    points++;
+  } else {
+    end();
+  }
+
+  scoreTxt.text = points.toString();
+
+  respawn(game);
+
+};
+
+var respawn = function(game) {
+
+    game.tweens.removeAll();
+    blocks.removeAll();
+
+    bar.kill();
+    timeBar.kill();
+    spawnBlocks(game);
+
+};
+
+var end = function() {
+
+  if (points > best) {
+    best = points;
+    bestTxt.text = best.toString();
+
+    setCookie('ColorMatch_BestScore', best, 7);
+  }
+
+  points = 0;
+  scoreTxt.text = '0';
 
 };
 /*
@@ -282,19 +281,15 @@ Menu.prototype = {
 
 };
 */
-var Preload = function(game) {
+var preloadBar = null;
+var isReady = true;
 
-  this.preloadBar = null;
-  this.ready = true;
+var Preload = function() {
 
-};
+  this.preload = function() {
 
-Preload.prototype = {
-
-  preload: function() {
-
-    this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
-    this.preloadBar.anchor.set(0.5, 0.5);
+    preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloader', 0);
+    preloadBar.anchor.set(0.5, 0.5);
 
     var preloaderFrames = [],
         i = 0;
@@ -303,33 +298,33 @@ Preload.prototype = {
       preloaderFrames[i] = i;
     }
 
-    this.preloadBar.animations.add('loading', preloaderFrames, 60, true);
-    this.preloadBar.play('loading');
+    preloadBar.animations.add('loading', preloaderFrames, 60, true);
+    preloadBar.play('loading');
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
-  },
+  };
 
-  create: function() {
+  this.create = function() {
 
-    this.preloadBar.cropEnabled = false;
+    preloadBar.cropEnabled = false;
 
-  },
+  };
 
-  update: function() {
+  this.update = function() {
 
-    if (this.ready) {
+    if (isReady) {
       // this.state.start('Menu');
       this.state.start('Game');
     }
 
-  },
+  };
 
-  onLoadComplete: function() {
+  this.onLoadComplete = function() {
 
-    this.ready = true;
+    isReady = true;
 
-  }
+  };
 
 };
 if (document.readyState === 'complete' || document.readyState === 'interactive') {

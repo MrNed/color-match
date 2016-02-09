@@ -1,21 +1,19 @@
-var Boot = function(game) {};
+var Boot = function() {
 
-Boot.prototype = {
-
-  init: function() {
+  this.init = function() {
 
     this.input.maxPointers = 1;
     this.stage.disableVisibilityChange = true;
 
-  },
+  };
 
-  preload: function() {
+  this.preload = function() {
 
     this.load.atlas('preloader', 'res/preloader.png', 'res/preloader.json');
 
-  },
+  };
 
-  create: function() {
+  this.create = function() {
 
     this.stage.backgroundColor = '#2c3e50';
 
@@ -28,6 +26,6 @@ Boot.prototype = {
 
     this.state.start('Preload');
 
-  }
+  };
 
 };
