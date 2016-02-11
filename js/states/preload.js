@@ -20,6 +20,7 @@ var Preload = function() {
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
+    this.load.atlas('sprites', 'res/sprites.png', 'res/sprites.json');
     this.load.bitmapFont('04font', 'res/04font.png', 'res/04font.fnt');
 
   };
@@ -33,8 +34,7 @@ var Preload = function() {
   this.update = function() {
 
     if (isReady) {
-      // this.state.start('Menu');
-      this.state.start('Game');
+      this.state.start('Menu');
     }
 
   };

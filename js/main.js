@@ -9,7 +9,7 @@ function start() {
 
   game.state.add('Boot', Boot);
   game.state.add('Preload', Preload);
-  // game.state.add('Menu', BasicGame.Menu);
+  game.state.add('Menu', Menu);
   game.state.add('Game', BasicGame);
 
   game.state.start('Boot');

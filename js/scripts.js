@@ -86,8 +86,14 @@ var BasicGame = function(game) {
     scoreTxt = this.add.bitmapText(this.world.width - 10, 25, '04font', '0', 28);
     scoreTxt.anchor.setTo(1, 0.5);
 
-    bestTxt = this.add.bitmapText(10, 25, '04font', best, 28);
-    bestTxt.anchor.setTo(0, 0.5);
+    bestTxt = this.add.bitmapText(this.world.width - 60, 25, '04font', best, 28);
+    bestTxt.anchor.setTo(1, 0.5);
+
+    var manuBtn = this.add.button(10, 22, 'sprites', function() {
+      this.state.start('Menu', true, false, this.config);
+    }, this, 'menu_active.png', 'menu.png', 'menu_active.png');
+    manuBtn.anchor.set(0, 0.5);
+    manuBtn.input.useHandCursor = true;
 
     blocks = this.add.group();
 
@@ -231,14 +237,13 @@ var end = function() {
   scoreTxt.text = '0';
 
 };
-/*
-var Menu = function() {
+var titleColors = ['white', 'emerald', 'sun_flower', 'blue', 'alizarin']
+    titleIndex = 0;
 
-};
+var Menu = function(game) {
 
-Menu.prototype = {
+  this.init = function(config) {
 
-  init: function(config) {
     if (!config) {
       config = {
 
@@ -246,26 +251,37 @@ Menu.prototype = {
     }
 
     this.config = config;
-  },
 
-  create: function() {
+    game.renderer.renderSession.roundPixels = true;
 
-    this.startClick();
+  };
 
-  },
+  this.create = function() {
 
-  update: function() {
+    var title = this.add.sprite(this.world.centerX, 100, 'sprites', 'title_white.png');
+    title.anchor.set(0.5);
 
-  },
+    this.time.events.add(1, function() {
+      this.time.events.loop(5000, function() {
+          titleIndex++;
 
-  startClick: function() {
+          if (titleIndex == 5) {
+            titleIndex = 0;
+          }
 
-    this.state.start('Game', true, false, this.config);
+          title.frameName = 'title_' + titleColors[titleIndex] + '.png';
+      }, this);
+    }, this);
 
-  },
+    var playBtn = this.add.button(this.world.centerX, this.world.centerY, 'sprites', function() {
+       this.state.start('Game', true, false, this.config);
+    }, this, 'play_active.png', 'play.png', 'play_active.png');
+    playBtn.anchor.set(0.5);
+    playBtn.input.useHandCursor = true;
+
+  };
 
 };
-*/
 var preloadBar = null;
 var isReady = false;
 
@@ -288,6 +304,7 @@ var Preload = function() {
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
+    this.load.atlas('sprites', 'res/sprites.png', 'res/sprites.json');
     this.load.bitmapFont('04font', 'res/04font.png', 'res/04font.fnt');
 
   };
@@ -301,8 +318,7 @@ var Preload = function() {
   this.update = function() {
 
     if (isReady) {
-      // this.state.start('Menu');
-      this.state.start('Game');
+      this.state.start('Menu');
     }
 
   };
@@ -325,7 +341,7 @@ function start() {
 
   game.state.add('Boot', Boot);
   game.state.add('Preload', Preload);
-  // game.state.add('Menu', BasicGame.Menu);
+  game.state.add('Menu', Menu);
   game.state.add('Game', BasicGame);
 
   game.state.start('Boot');

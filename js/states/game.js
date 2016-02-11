@@ -62,8 +62,14 @@ var BasicGame = function(game) {
     scoreTxt = this.add.bitmapText(this.world.width - 10, 25, '04font', '0', 28);
     scoreTxt.anchor.setTo(1, 0.5);
 
-    bestTxt = this.add.bitmapText(10, 25, '04font', best, 28);
-    bestTxt.anchor.setTo(0, 0.5);
+    bestTxt = this.add.bitmapText(this.world.width - 60, 25, '04font', best, 28);
+    bestTxt.anchor.setTo(1, 0.5);
+
+    var manuBtn = this.add.button(10, 22, 'sprites', function() {
+      this.state.start('Menu', true, false, this.config);
+    }, this, 'menu_active.png', 'menu.png', 'menu_active.png');
+    manuBtn.anchor.set(0, 0.5);
+    manuBtn.input.useHandCursor = true;
 
     blocks = this.add.group();
 
