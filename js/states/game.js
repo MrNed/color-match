@@ -138,9 +138,9 @@ var spawnBlocks = function(game) {
   var freePos = [0, 1, 2, 3, 4, 5, 6, 7, 8],
       index = Math.floor(Math.random() * 9),
       group = 'group_' + (Math.floor(Math.random() * 2) + 1),
-      groupName = points < 20 ? group : group + '_hard',
+      groupName = points < 15 ? group : group + '_hard',
       freeColors = colorsArr[groupName].slice(),
-      freeColorsCount = points < 20 ? 3 : 6,
+      freeColorsCount = points < 15 ? 3 : 6,
       colorIndex = Math.floor(Math.random() * freeColorsCount),
       color = freeColors[colorIndex];
 
@@ -151,7 +151,8 @@ var spawnBlocks = function(game) {
   spliceOne(freePos, index);
   spliceOne(freeColors, colorIndex);
 
-  var blocksNum = points <= 7 ? points : 8;
+  var blocksNum = points <= 4 ? points * 2 : 8;
+  // var blocksNum = 8;
 
   var i = 0;
   for (i = 0; i < blocksNum; i++) {

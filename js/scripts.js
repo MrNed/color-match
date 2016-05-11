@@ -184,7 +184,8 @@ var spawnBlocks = function(game) {
   spliceOne(freePos, index);
   spliceOne(freeColors, colorIndex);
 
-  var blocksNum = points <= 7 ? points : 8;
+  var blocksNum = points <= 4 ? points * 2 : 8;
+  // var blocksNum = 8;
 
   var i = 0;
   for (i = 0; i < blocksNum; i++) {
