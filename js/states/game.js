@@ -44,9 +44,7 @@ var blocks = null,
 
 var BasicGame = function(game) {
 
-  this.init = function (config) {
-
-    this.config = config;
+  this.init = function () {
 
     var bestScoreCookie = getCookie("ColorMatch_BestScore");
     if (bestScoreCookie != "") {
@@ -65,11 +63,7 @@ var BasicGame = function(game) {
     bestTxt = this.add.bitmapText(this.world.width - 60, 25, '04font', best, 28);
     bestTxt.anchor.setTo(1, 0.5);
 
-    var manuBtn = this.add.button(10, 22, 'sprites', function() {
-      this.state.start('Menu', true, false, this.config);
-    }, this, 'menu_active.png', 'menu.png', 'menu_active.png');
-    manuBtn.anchor.set(0, 0.5);
-    manuBtn.input.useHandCursor = true;
+    createBackMenuBtn(game);
 
     blocks = this.add.group();
 

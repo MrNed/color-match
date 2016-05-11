@@ -3,15 +3,7 @@ var titleColors = ['white', 'emerald', 'sun_flower', 'blue', 'alizarin']
 
 var Menu = function(game) {
 
-  this.init = function(config) {
-
-    if (!config) {
-      config = {
-
-      };
-    }
-
-    this.config = config;
+  this.init = function() {
 
     game.renderer.renderSession.roundPixels = true;
 
@@ -35,11 +27,23 @@ var Menu = function(game) {
     }, this);
 
     var playBtn = this.add.button(this.world.centerX, this.world.centerY, 'sprites', function() {
-       this.state.start('Game', true, false, this.config);
+       this.state.start('Game');
     }, this, 'play_active.png', 'play.png', 'play_active.png');
     playBtn.anchor.set(0.5);
     playBtn.input.useHandCursor = true;
+/*
+    var bestBtn = this.add.button(this.world.centerX, this.world.centerY + 60, 'sprites', function() {
+       this.state.start('BestScore');
+    }, this, 'best_active.png', 'best.png', 'best_active.png');
+    bestBtn.anchor.set(0.5);
+    bestBtn.input.useHandCursor = true;
 
+    var infoBtn = this.add.button(this.world.centerX, this.world.centerY + 120, 'sprites', function() {
+       this.state.start('Info');
+    }, this, 'info_active.png', 'info.png', 'info_active.png');
+    infoBtn.anchor.set(0.5);
+    infoBtn.input.useHandCursor = true;
+*/
   };
 
 };

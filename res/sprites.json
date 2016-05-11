@@ -1,47 +1,67 @@
 {
 "frames": [
-	 {"filename":"menu.png",
-		"frame": {"x":213, "y":115, "w":32, "h":22},
-		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":22},
-		"sourceSize": {"w":32,"h":22}
-	},
-	 {"filename":"menu_active.png",
-		"frame": {"x":213, "y":92, "w":32, "h":22},
-		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":22},
-		"sourceSize": {"w":32,"h":22}
-	},
-	 {"filename":"play.png",
+	 {"filename":"best.png",
 		"frame": {"x":0, "y":46, "w":280, "h":45},
 		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
 		"sourceSize": {"w":280,"h":45}
 	},
-	 {"filename":"play_active.png",
+	 {"filename":"best_active.png",
+		"frame": {"x":0, "y":138, "w":280, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
+		"sourceSize": {"w":280,"h":45}
+	},
+	 {"filename":"info.png",
+		"frame": {"x":0, "y":230, "w":280, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
+		"sourceSize": {"w":280,"h":45}
+	},
+	 {"filename":"info_active.png",
+		"frame": {"x":0, "y":184, "w":280, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
+		"sourceSize": {"w":280,"h":45}
+	},
+	 {"filename":"menu.png",
+		"frame": {"x":0, "y":393, "w":32, "h":22},
+		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":22},
+		"sourceSize": {"w":32,"h":22}
+	},
+	 {"filename":"menu_active.png",
+		"frame": {"x":33, "y":393, "w":32, "h":22},
+		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":22},
+		"sourceSize": {"w":32,"h":22}
+	},
+	 {"filename":"play.png",
 		"frame": {"x":0, "y":0, "w":280, "h":45},
 		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
 		"sourceSize": {"w":280,"h":45}
 	},
+	 {"filename":"play_active.png",
+		"frame": {"x":0, "y":92, "w":280, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":280,"h":45},
+		"sourceSize": {"w":280,"h":45}
+	},
 	 {"filename":"title_alizarin.png",
-		"frame": {"x":0, "y":248, "w":212, "h":38},
+		"frame": {"x":0, "y":276, "w":212, "h":38},
 		"spriteSourceSize": {"x":0,"y":0,"w":212,"h":38},
 		"sourceSize": {"w":212,"h":38}
 	},
 	 {"filename":"title_blue.png",
-		"frame": {"x":0, "y":131, "w":212, "h":38},
+		"frame": {"x":0, "y":354, "w":212, "h":38},
 		"spriteSourceSize": {"x":0,"y":0,"w":212,"h":38},
 		"sourceSize": {"w":212,"h":38}
 	},
 	 {"filename":"title_emerald.png",
-		"frame": {"x":0, "y":209, "w":212, "h":38},
+		"frame": {"x":213, "y":276, "w":212, "h":38},
 		"spriteSourceSize": {"x":0,"y":0,"w":212,"h":38},
 		"sourceSize": {"w":212,"h":38}
 	},
 	 {"filename":"title_sun_flower.png",
-		"frame": {"x":0, "y":170, "w":212, "h":38},
+		"frame": {"x":0, "y":315, "w":212, "h":38},
 		"spriteSourceSize": {"x":0,"y":0,"w":212,"h":38},
 		"sourceSize": {"w":212,"h":38}
 	},
 	 {"filename":"title_white.png",
-		"frame": {"x":0, "y":92, "w":212, "h":38},
+		"frame": {"x":213, "y":315, "w":212, "h":38},
 		"spriteSourceSize": {"x":0,"y":0,"w":212,"h":38},
 		"sourceSize": {"w":212,"h":38}
 	}
@@ -49,7 +69,7 @@
 ],
 "meta": {
 	"image": "sprites.png",
-	"size": {"w": 281, "h": 287},
+	"size": {"w": 426, "h": 416},
 	"scale": "1"
 }
 }

@@ -1,3 +1,12 @@
+var BestScore = function(game) {
+
+  this.create = function() {
+
+    createBackMenuBtn(game);
+
+  };
+
+};
 var Boot = function() {
 
   this.init = function() {
@@ -68,9 +77,7 @@ var blocks = null,
 
 var BasicGame = function(game) {
 
-  this.init = function (config) {
-
-    this.config = config;
+  this.init = function () {
 
     var bestScoreCookie = getCookie("ColorMatch_BestScore");
     if (bestScoreCookie != "") {
@@ -89,11 +96,7 @@ var BasicGame = function(game) {
     bestTxt = this.add.bitmapText(this.world.width - 60, 25, '04font', best, 28);
     bestTxt.anchor.setTo(1, 0.5);
 
-    var manuBtn = this.add.button(10, 22, 'sprites', function() {
-      this.state.start('Menu', true, false, this.config);
-    }, this, 'menu_active.png', 'menu.png', 'menu_active.png');
-    manuBtn.anchor.set(0, 0.5);
-    manuBtn.input.useHandCursor = true;
+    createBackMenuBtn(game);
 
     blocks = this.add.group();
 
@@ -237,20 +240,21 @@ var end = function() {
   scoreTxt.text = '0';
 
 };
+var Info = function(game) {
+
+  this.create = function() {
+
+    createBackMenuBtn(game);
+
+  };
+
+};
 var titleColors = ['white', 'emerald', 'sun_flower', 'blue', 'alizarin']
     titleIndex = 0;
 
 var Menu = function(game) {
 
-  this.init = function(config) {
-
-    if (!config) {
-      config = {
-
-      };
-    }
-
-    this.config = config;
+  this.init = function() {
 
     game.renderer.renderSession.roundPixels = true;
 
@@ -274,11 +278,23 @@ var Menu = function(game) {
     }, this);
 
     var playBtn = this.add.button(this.world.centerX, this.world.centerY, 'sprites', function() {
-       this.state.start('Game', true, false, this.config);
+       this.state.start('Game');
     }, this, 'play_active.png', 'play.png', 'play_active.png');
     playBtn.anchor.set(0.5);
     playBtn.input.useHandCursor = true;
+/*
+    var bestBtn = this.add.button(this.world.centerX, this.world.centerY + 60, 'sprites', function() {
+       this.state.start('BestScore');
+    }, this, 'best_active.png', 'best.png', 'best_active.png');
+    bestBtn.anchor.set(0.5);
+    bestBtn.input.useHandCursor = true;
 
+    var infoBtn = this.add.button(this.world.centerX, this.world.centerY + 120, 'sprites', function() {
+       this.state.start('Info');
+    }, this, 'info_active.png', 'info.png', 'info_active.png');
+    infoBtn.anchor.set(0.5);
+    infoBtn.input.useHandCursor = true;
+*/
   };
 
 };
@@ -342,36 +358,62 @@ function start() {
   game.state.add('Boot', Boot);
   game.state.add('Preload', Preload);
   game.state.add('Menu', Menu);
+  game.state.add('BestScore', BestScore);
+  game.state.add('Info', Info);
   game.state.add('Game', BasicGame);
 
   game.state.start('Boot');
-}
+};
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
+var setCookie = function(cname, cvalue, exdays) {
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires;
+
+};
+
+var getCookie = function(cname) {
+
+  var name = cname + "=",
+      ca = document.cookie.split(';');
+
+  for ( var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
     }
-    return "";
-}
 
-function spliceOne(a, i) {
+    if  (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+
+  return "";
+
+};
+
+var spliceOne = function(a, i) {
   var l = a.length;
 
   if (l) {
     while (i<l) {
       a[i++] = a[i];
     }
+
     --a.length;
   }
-}
+
+};
+
+var createBackMenuBtn = function(game) {
+
+  var manuBtn = game.add.button(10, 22, 'sprites', function() {
+    game.state.start('Menu');
+  }, this, 'menu_active.png', 'menu.png', 'menu_active.png');
+  manuBtn.anchor.set(0, 0.5);
+  manuBtn.input.useHandCursor = true;
+
+};
